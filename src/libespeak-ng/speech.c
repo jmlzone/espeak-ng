@@ -36,7 +36,7 @@
 #ifdef HAVE_PCAUDIOLIB_AUDIO_H
 #include <pcaudiolib/audio.h>
 #endif
-
+#include "alsa.h"
 #if defined(_WIN32) || defined(_WIN64)
 #include <fcntl.h>
 #include <io.h>
@@ -164,7 +164,11 @@ static int dispatch_audio(short *outbuf, int length, espeak_EVENT *event)
 				fprintf(stderr, "error: %s\n", audio_object_strerror(my_audio, error));
 		}
 #endif
-
+#ifdef HAVE_DIRECT_ALSA_H
+		if (outbuf && length && a_wave_can_be_played) {
+		  alsa_send_samples( (short *) outbuf, length);
+		    }
+#endif
 #ifdef USE_ASYNC
 		while (event && a_wave_can_be_played) {
 			// TBD: some event are filtered here but some insight might be given
@@ -275,7 +279,9 @@ ESPEAK_NG_API espeak_ng_STATUS espeak_ng_InitializeOutput(espeak_ng_OUTPUT_MODE 
 	if (my_audio == NULL)
 		my_audio = create_audio_device_object(device, "eSpeak", "Text-to-Speech");
 #endif
-
+#ifdef HAVE_DIRECT_ALSA_H
+	alsa_open_device( (char *) device);
+#endif
 	// buffer_length is in mS, allocate 2 bytes per sample
 	if (buffer_length == 0)
 		buffer_length = 60;
@@ -921,6 +927,10 @@ ESPEAK_NG_API espeak_ng_STATUS espeak_ng_Terminate(void)
 	fifo_terminate();
 	event_terminate();
 #endif
+#ifdef HAVE_DIRECT_ALSA_H
+       alsa_terminate();
+#endif
+
 
 	if ((my_mode & ENOUTPUT_MODE_SPEAK_AUDIO) == ENOUTPUT_MODE_SPEAK_AUDIO) {
 #ifdef HAVE_PCAUDIOLIB_AUDIO_H
