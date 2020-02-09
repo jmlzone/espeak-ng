@@ -54,6 +54,7 @@ static const char *help_text =
     "-a <integer>\n"
     "\t   Amplitude, 0 to 200, default is 100\n"
     "-d <device>\n"
+    "-D <alsa device> ie: -D sysdefault:CARD=Device_1\n"
     "\t   Use the specified device to speak the audio on. If not specified, the\n"
     "\t   default audio device is used.\n"
     "-g <integer>\n"
@@ -364,7 +365,7 @@ int main(int argc, char **argv)
 	option_punctlist[0] = 0;
 
 	while (true) {
-		c = getopt_long(argc, argv, "a:b:d:f:g:hk:l:mp:qs:v:w:xXz",
+		c = getopt_long(argc, argv, "a:b:d:D:f:g:hk:l:mp:qs:v:w:xXz",
 		                long_options, &option_index);
 
 		// Detect the end of the options.
@@ -382,6 +383,9 @@ int main(int argc, char **argv)
 				synth_flags |= espeakCHARS_8BIT;
 			break;
 		case 'd':
+			strncpy0(devicename, optarg2, sizeof(devicename));
+			break;
+		case 'D':
 			strncpy0(devicename, optarg2, sizeof(devicename));
 			break;
 		case 'h':
