@@ -130,7 +130,7 @@ espeak_ng_include_HEADERS = \
 lib_LTLIBRARIES += src/libespeak-ng.la
 
 src_libespeak_ng_la_LDFLAGS = -version-info $(SHARED_VERSION) -lpthread -lm \
-	${PCAUDIOLIB_LIBS}
+	${PCAUDIOLIB_LIBS} -lasound
 
 src_libespeak_ng_la_CFLAGS = \
 	-fPIC -fvisibility=hidden \
@@ -169,6 +169,7 @@ src_libespeak_ng_la_SOURCES = \
 	src/libespeak-ng/translate.c \
 	src/libespeak-ng/tr_languages.c \
 	src/libespeak-ng/voices.c \
+	src/libespeak-ng/alsa.c \
 	src/libespeak-ng/wavegen.c
 
 if OPT_KLATT
@@ -196,7 +197,7 @@ man1_MANS += src/speak-ng.1
 endif
 
 src_speak_ng_LDADD   = src/libespeak-ng.la
-src_speak_ng_LDFLAGS = -static -lm ${PCAUDIOLIB_LIBS}
+src_speak_ng_LDFLAGS = -static -lm ${PCAUDIOLIB_LIBS} -lasound
 src_speak_ng_CFLAGS  = -Isrc/libespeak-ng ${AM_CFLAGS}
 src_speak_ng_SOURCES = src/speak-ng.c
 
