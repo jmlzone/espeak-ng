@@ -99,6 +99,9 @@ In order to build eSpeak NG, you need:
 
 1.  a functional autotools system (`make`, `autoconf`, `automake`, `libtool`
     and `pkg-config`);
+    ie:
+       sudo apt-get install -y automake libtool
+
 2.  a functional c compiler that supports C99 (e.g. gcc or clang).
 
 Optionally, you need:
